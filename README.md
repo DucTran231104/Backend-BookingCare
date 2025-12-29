@@ -8,7 +8,7 @@ Backend API for BookingCare application - online medical appointment booking pla
 - **Express.js** - Web framework
 - **MySQL** - Database with Sequelize ORM
 - **bcrypt/bcryptjs** - Password hashing
-- **CORS** - Cross-Origin Resource Sharing
+- **CORS** - Cross-Origin Resource Sharing  
 - **EJS** - Template engine
 - **Babel** - JavaScript compiler
 - **Nodemon** - Development tool
