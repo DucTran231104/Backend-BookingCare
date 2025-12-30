@@ -20,7 +20,7 @@ module.exports = (sequelize, DataTypes) => {
         valueVi: DataTypes.STRING,
     }, {
         sequelize,
-        modelName: 'AllCode',
+        modelName: 'AllCodes',
     });
     return AllCodes;
 };
