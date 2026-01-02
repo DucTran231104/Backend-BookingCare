@@ -9,7 +9,7 @@ let getTopDoctorHome = (limitInput) => {
                 order: [['createdAt', 'DESC']],
                 where: { roleId: 'R2' },
                 attributes: {
-                    exclude: ['password', 'image']
+                    exclude: ['password']
                 },
                 include: [
                     { model: db.AllCodes, as: 'positionData', attributes: ['valueEn', 'valueVi'] },
