@@ -19,10 +19,6 @@ module.exports = {
                 allowNull: false,
                 type: Sequelize.TEXT('LONG')
             },
-            introduction: {
-                allowNull: false,
-                type: Sequelize.TEXT('LONG')
-            },
             description: {
                 allowNull: true,
                 type: Sequelize.TEXT('LONG')

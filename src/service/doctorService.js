@@ -47,7 +47,35 @@ let getAllDoctors = () => {
         }
     })
 }
+let saveDetailInfoDoctor = (inputData) => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            if (!inputData.id || !inputData.contentHTML || !inputData.contentMarkdown) {
+                resolve({
+                    errCode: 1,
+                    message: 'Missing required parameter'
+                })
+            }
+            else {
+                await db.Markdown.create({
+                    contentHTML: inputData.contentHTML,
+                    contentMarkdown: inputData.contentMarkdown,
+                    description: inputData.description,
+                    doctorId: inputData.id,
+                    updatedAt: new Date()
+                })
+            }
+            resolve({
+                errCode: 0,
+                message: 'Save info doctor success'
+            })
+        } catch (e) {
+            reject(e);
+        }
+    })
+}
 module.exports = {
     getTopDoctorHome: getTopDoctorHome,
-    getAllDoctors: getAllDoctors
+    getAllDoctors: getAllDoctors,
+    saveDetailInfoDoctor: saveDetailInfoDoctor
 }
