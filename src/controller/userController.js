@@ -74,11 +74,26 @@ let getAllCode = async (req, res) => {
         })
     }
 }
+
+let sendBookingEmail = async (req, res) => {
+    try {
+        let data = await userService.sendBookingEmailService(req.body);
+        return res.status(200).json(data);
+    } catch (e) {
+        console.log('Send booking email error: ', e);
+        return res.status(200).json({
+            errCode: -1,
+            errMessage: "Error from server",
+        })
+    }
+}
+
 module.exports = {
     handleLogin: handleLogin,
     handleGetAllUser: handleGetAllUser,
     handleCreateNewUser: handleCreateNewUser,
     handleEditUser: handleEditUser,
     handleDeleteUser: handleDeleteUser,
-    getAllCode: getAllCode
+    getAllCode: getAllCode,
+    sendBookingEmail: sendBookingEmail
 }
