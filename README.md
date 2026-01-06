@@ -86,7 +86,7 @@ Before you begin, ensure you have met the following requirements:
     ```
 
 * **Server Status:**
-    The server will start at: `http://localhost:6969`
+    The server will start at: `http://localhost:8081`
 
 * **CORS Configuration:**
     The backend is configured to accept requests from:
