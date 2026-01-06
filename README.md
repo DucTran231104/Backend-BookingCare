@@ -51,7 +51,7 @@ Before you begin, ensure you have met the following requirements:
 3.  **Environment Configuration**
     Create a `.env` file in the root directory based on your configuration (or `config/config.json`):
     ```env
-    PORT=6969
+    PORT=8081
     NODE_ENV=development
     DB_HOST=127.0.0.1
     DB_USERNAME=root
