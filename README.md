@@ -25,6 +25,6 @@ npm start
 
 **This project uses:**
 - **Database:** MySQL with Sequelize ORM
-- **Port:** 6969 (default)
+- **Port:** 8081 (default)
 - **CORS:** Configured for React frontend (port 3000, 3001)
 - **View Engine:** EJS templates 

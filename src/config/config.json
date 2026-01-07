@@ -11,6 +11,18 @@
         },
         "timezone": "+07:00"
     },
+    "docker": {
+        "username": "root",
+        "password": "rootpassword",
+        "database": "Bookingcare1",
+        "host": "mysql",
+        "dialect": "mysql",
+        "logging": false,
+        "query": {
+            "raw": true
+        },
+        "timezone": "+07:00"
+    },
     "test": {
         "username": "root",
         "password": null,
@@ -20,9 +32,14 @@
     },
     "production": {
         "username": "root",
-        "password": null,
+        "password": "rootpassword",
         "database": "Bookingcare_production",
-        "host": "127.0.0.1",
-        "dialect": "mysql"
+        "host": "mysql",
+        "dialect": "mysql",
+        "logging": false,
+        "query": {
+            "raw": true
+        },
+        "timezone": "+07:00"
     }
 }

@@ -11,8 +11,16 @@ const { Sequelize } = require('sequelize');
 // });
 
 // // Option 3: Passing parameters separately (other dialects)
-const sequelize = new Sequelize('Bookingcare', 'root', null, {
-    host: 'localhost',
+// Sử dụng biến môi trường nếu có, nếu không thì dùng giá trị mặc định
+const dbName = process.env.DB_NAME || 'Bookingcare';
+const dbUser = process.env.DB_USER || 'root';
+const dbPassword = process.env.DB_PASSWORD || null;
+const dbHost = process.env.DB_HOST || 'localhost';
+const dbPort = process.env.DB_PORT || 3306;
+
+const sequelize = new Sequelize(dbName, dbUser, dbPassword, {
+    host: dbHost,
+    port: dbPort,
     dialect: 'mysql', /* one of| 'postgres' | 'sqlite' | 'mariadb' | 'mssql' | 'db2' | 'snowflake' | 'oracle' */
     logging: false
 });
