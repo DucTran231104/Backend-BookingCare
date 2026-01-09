@@ -242,6 +242,135 @@ let getAllCodeService = (typeInput) => {
         }
     })
 }
+
+let sendBookingEmailService = (data) => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            console.log('Booking email data received:', data);
+
+            if (!data.doctorId || !data.patientName || !data.patientEmail || !data.patientPhone) {
+                resolve({
+                    errCode: 1,
+                    errMessage: "Missing required parameters"
+                });
+                return;
+            }
+
+            // Lấy thông tin bác sĩ
+            console.log('Looking for doctor with ID:', data.doctorId);
+            let doctor = await db.User.findOne({
+                where: { id: data.doctorId },
+                attributes: ['email', 'firstName', 'lastName'],
+                raw: true
+            });
+
+            console.log('Doctor found:', doctor);
+
+            if (!doctor) {
+                resolve({
+                    errCode: 2,
+                    errMessage: "Doctor not found"
+                });
+                return;
+            }
+
+            // Kiểm tra email của bác sĩ
+            if (!doctor.email || doctor.email.trim() === '') {
+                resolve({
+                    errCode: 4,
+                    errMessage: "Doctor email not found. Please update doctor's email in the system."
+                });
+                return;
+            }
+
+            // Lấy thông tin thời gian
+            let timeType = await db.AllCodes.findOne({
+                where: { keyMap: data.timeType },
+                attributes: ['valueVi', 'valueEn']
+            });
+
+            let timeDisplay = timeType ? timeType.valueVi : data.timeType;
+            let dateDisplay = new Date(+data.date).toLocaleDateString('vi-VN');
+
+            // Import nodemailer
+            const nodemailer = require('nodemailer');
+
+            // Kiểm tra cấu hình email
+            if (!process.env.EMAIL_USER || !process.env.EMAIL_PASSWORD) {
+                resolve({
+                    errCode: 3,
+                    errMessage: "Email configuration not found. Please configure EMAIL_USER and EMAIL_PASSWORD in .env file"
+                });
+                return;
+            }
+
+            // Cấu hình transporter (sử dụng Gmail SMTP)
+            let transporter = nodemailer.createTransport({
+                service: 'gmail',
+                auth: {
+                    user: process.env.EMAIL_USER,
+                    pass: process.env.EMAIL_PASSWORD
+                }
+            });
+
+            // Kiểm tra lại email trước khi gửi
+            const doctorEmail = doctor.email ? doctor.email.trim() : '';
+            if (!doctorEmail) {
+                console.log('Doctor email is missing:', doctor);
+                resolve({
+                    errCode: 4,
+                    errMessage: "Doctor email is invalid or not found"
+                });
+                return;
+            }
+
+            // Đảm bảo firstName và lastName không null
+            const doctorFirstName = doctor.firstName || '';
+            const doctorLastName = doctor.lastName || '';
+            const doctorFullName = `${doctorFirstName} ${doctorLastName}`.trim() || 'Bác sĩ';
+
+            console.log('Sending email to doctor:', doctorEmail);
+
+            // Nội dung email
+            let mailOptions = {
+                from: process.env.EMAIL_USER,
+                to: doctorEmail,
+                subject: 'Thông báo đặt lịch khám mới',
+                html: `
+                    <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+                        <h2 style="color: #337a73;">Thông báo đặt lịch khám mới</h2>
+                        <p>Xin chào bác sĩ <strong>${doctorFullName}</strong>,</p>
+                        <p>Bạn có một lịch đặt khám mới với thông tin sau:</p>
+                        <div style="background-color: #f0f8ff; padding: 15px; border-radius: 5px; margin: 20px 0;">
+                            <ul style="list-style: none; padding: 0;">
+                                <li style="margin: 10px 0;"><strong>Họ và tên bệnh nhân:</strong> ${data.patientName}</li>
+                                <li style="margin: 10px 0;"><strong>Email:</strong> ${data.patientEmail}</li>
+                                <li style="margin: 10px 0;"><strong>Số điện thoại:</strong> ${data.patientPhone}</li>
+                                <li style="margin: 10px 0;"><strong>Ngày khám:</strong> ${dateDisplay}</li>
+                                <li style="margin: 10px 0;"><strong>Thời gian:</strong> ${timeDisplay}</li>
+                            </ul>
+                        </div>
+                        <p>Vui lòng xác nhận và chuẩn bị cho lịch khám này.</p>
+                        <p style="margin-top: 30px;">Trân trọng,<br><strong>Hệ thống BookingCare</strong></p>
+                    </div>
+                `
+            };
+
+            // Gửi email
+            await transporter.sendMail(mailOptions);
+
+            resolve({
+                errCode: 0,
+                errMessage: "Email sent successfully"
+            });
+
+        } catch (e) {
+            console.log('Error sending email:', e);
+            reject(e);
+        }
+    })
+}
+
 module.exports = {
     handleUserLogin: handleUserLogin,
     getAllUser: getAllUser,
@@ -249,6 +378,7 @@ module.exports = {
     deleteUser: deleteUser,
     updateUserData: updateUserData,
     getAllCodeService: getAllCodeService,
+    sendBookingEmailService: sendBookingEmailService,
 
 
 }
